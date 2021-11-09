@@ -33,12 +33,20 @@ public class User {
 
     private int likes;
 
+    @ElementCollection
+    @CollectionTable(name="liked_user", joinColumns=@JoinColumn(name="user_id"))
+    private List<Integer> likedUser = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name="bookmark_user", joinColumns=@JoinColumn(name="user_id"))
+    private List<Integer> bookmarkUser = new ArrayList<>();
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Bio bio;
     @ElementCollection
     @CollectionTable(name="friend_list", joinColumns=@JoinColumn(name="user_id"))
-    private List<Integer> friends = new ArrayList<>();
+    private List<Long> friends = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator", orphanRemoval = true)
     private List<Meet> userMeets = new ArrayList<>();
     @Column(nullable = false)

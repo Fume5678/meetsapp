@@ -17,19 +17,23 @@ public class Meet {
     private Long id;
     private String title;
     private String location;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime meetDate;
+    @JsonFormat(pattern = "HH:mm")
+    private LocalDateTime meetTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
     @ElementCollection
     @CollectionTable(name="friend_list", joinColumns=@JoinColumn(name="user_id"))
     @Column(name="friends")
-    private List<Integer> meetUser = new ArrayList<>();
+    private List<Long> meetUser = new ArrayList<>();
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "meet", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
-    @Column(nullable = false, columnDefinition = "BIT default 0")
-    private boolean isPublic;
+    @Column(nullable = false, columnDefinition = "INTEGER default 0")
+    private int open;
 
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdDate;
 
     @PrePersist

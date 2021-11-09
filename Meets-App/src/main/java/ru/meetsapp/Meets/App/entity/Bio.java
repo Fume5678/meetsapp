@@ -10,8 +10,7 @@ import javax.persistence.*;
 public class Bio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private long Id;
+    private Long id;
     private float height;
     private float weight;
     private String hairColor;
