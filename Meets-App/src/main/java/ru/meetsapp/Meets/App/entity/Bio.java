@@ -15,9 +15,10 @@ public class Bio {
     private float weight;
     private String hairColor;
     private String gender;
-    @Column(nullable = true, columnDefinition = "Text")
+    @Column(columnDefinition = "Text")
     private String biography;
-    private String work;
+    private String job;
+    @Column(length = 512)
     private String specialSigns;
     @OneToOne
     @MapsId

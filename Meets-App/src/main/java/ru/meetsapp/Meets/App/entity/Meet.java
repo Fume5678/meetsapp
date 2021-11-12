@@ -16,6 +16,7 @@ public class Meet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    @Column(columnDefinition = "text", nullable = false)
     private String location;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime meetDate;

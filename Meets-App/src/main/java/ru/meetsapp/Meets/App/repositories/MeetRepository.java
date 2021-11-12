@@ -12,10 +12,8 @@ import java.util.Optional;
 @Repository
 public interface MeetRepository extends JpaRepository<Meet, Long> {
     Optional<Meet> findMeetById(Long id);
-    Optional<Meet> findAllByMeetUserContaining(Long id);
-
+    List<Meet> findAllByMeetUserContainingOrderByCreatedDateDesc(Long id);
     List<Meet> findAllByCreatorOrderByCreatedDateDesc(User user);
-
     List<Meet> findAllByOpenOrderByCreatedDateDesc(int open);
 
 

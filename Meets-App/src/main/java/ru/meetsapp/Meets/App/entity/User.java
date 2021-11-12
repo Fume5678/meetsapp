@@ -3,20 +3,19 @@ package ru.meetsapp.Meets.App.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Generated;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import ru.meetsapp.Meets.App.entity.enums.ERole;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
 @Table(name = "user")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
@@ -30,23 +29,22 @@ public class User {
     private String email;
     @Column(nullable = false, length = 3000)
     private String password;
-
+    @Column(columnDefinition = "INTEGER default 0")
     private int likes;
 
-    @ElementCollection
-    @CollectionTable(name="liked_user", joinColumns=@JoinColumn(name="user_id"))
-    private List<Integer> likedUser = new ArrayList<>();
-
-    @ElementCollection
-    @CollectionTable(name="bookmark_user", joinColumns=@JoinColumn(name="user_id"))
-    private List<Integer> bookmarkUser = new ArrayList<>();
+    @Column
+    @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
+    private Set<Long> likedUsers = new HashSet<>();
+    @Column
+    @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
+    private Set<Long> bookmarkUsers = new HashSet<>();
+    @Column
+    @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
+    private Set<Long> friends = new HashSet<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Bio bio;
-    @ElementCollection
-    @CollectionTable(name="friend_list", joinColumns=@JoinColumn(name="user_id"))
-    private List<Long> friends = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator", orphanRemoval = true)
     private List<Meet> userMeets = new ArrayList<>();
     @Column(nullable = false)
@@ -59,5 +57,29 @@ public class User {
         this.createdDate = LocalDateTime.now();
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }
 
