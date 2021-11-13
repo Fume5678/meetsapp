@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.meetsapp.Meets.App.dto.BioDTO;
 import ru.meetsapp.Meets.App.dto.UserDTO;
 import ru.meetsapp.Meets.App.entity.Bio;
+import ru.meetsapp.Meets.App.entity.Meet;
 import ru.meetsapp.Meets.App.entity.User;
 import ru.meetsapp.Meets.App.entity.enums.ERole;
 import ru.meetsapp.Meets.App.repositories.BioRepository;
@@ -53,7 +54,7 @@ public class UserService {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
             LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            return null;
         }
 
         return user.get();
@@ -63,7 +64,7 @@ public class UserService {
         Optional<User> user = repository.findUserByUsername(username);
         if(user.isEmpty()){
             LOG.error("Error not found user, id {}", username);
-            throw new RuntimeException("User not found");
+            return null;
         }
 
         return user.get();
@@ -88,8 +89,8 @@ public class UserService {
     public Set<Long> getBookmarksIdById(Long id){
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
-            LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            LOG.error("Error not bookmark id {}", id);
+            return null;
         }
 
         return user.get().getBookmarkUsers();
@@ -98,8 +99,8 @@ public class UserService {
     public Set<User> getBookmarksUsersById(Long id){
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
-            LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            LOG.error("Error not found bookmark id {}", id);
+            return null;
         }
         Set<User> bookmarks = new HashSet<>();
 
@@ -114,8 +115,8 @@ public class UserService {
     public Set<Long> getLikedUsersIdById(Long id) {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
-            LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            LOG.error("Error not liked user, id {}", id);
+            return null;
         }
         return user.get().getLikedUsers();
     }
@@ -123,8 +124,8 @@ public class UserService {
     public Set<User> getLikedUsersById(Long id) {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
-            LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            LOG.error("Error not found liked, id {}", id);
+            return null;
         }
         Set<User> likedUsers = new HashSet<>();
 
@@ -140,7 +141,7 @@ public class UserService {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
             LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            return null;
         }
 
         Set<Long>  bookmarkUsers = user.get().getBookmarkUsers();
@@ -162,7 +163,7 @@ public class UserService {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
             LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            return null;
         }
 
         Set<Long>  likedUsers = user.get().getLikedUsers();
@@ -184,7 +185,7 @@ public class UserService {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
             LOG.error("Error not found user, id {}", id);
-            throw new RuntimeException("User not found");
+            return null;
         }
 
         Bio newBio = new Bio();
@@ -205,6 +206,16 @@ public class UserService {
             LOG.error("Failed to update bio of user {} id", id);
             throw new RuntimeException("Failed to update bio");
         }
+    }
+
+    public void deleteUserById(Long id){
+        Optional<User> meet = repository.findUserById(id);
+        meet.ifPresent(repository::delete);
+    }
+
+    public void deleteUserByUsername(String username){
+        Optional<User> meet = repository.findUserByUsername(username);
+        meet.ifPresent(repository::delete);
     }
 
 

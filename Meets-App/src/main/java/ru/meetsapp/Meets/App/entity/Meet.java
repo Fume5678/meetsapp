@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalTime;
+import java.util.*;
 
 @Data
 @Entity
@@ -18,17 +19,14 @@ public class Meet {
     private String title;
     @Column(columnDefinition = "text", nullable = false)
     private String location;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime meetDate;
-    @JsonFormat(pattern = "HH:mm")
-    private LocalDateTime meetTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime meetDateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
-    @ElementCollection
-    @CollectionTable(name="friend_list", joinColumns=@JoinColumn(name="user_id"))
-    @Column(name="friends")
-    private List<Long> meetUser = new ArrayList<>();
+    @Column
+    @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
+    private Set<Long> meetUsers = new HashSet<>();
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "meet", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     @Column(nullable = false, columnDefinition = "INTEGER default 0")
@@ -40,5 +38,21 @@ public class Meet {
     @PrePersist
     protected void onCreate(){
         this.createdDate = LocalDateTime.now();
+    }
+
+    public String getSDate(){
+        String date = meetDateTime.toString();
+        System.out.println(Arrays.toString(date.split("T")));
+        date = date.split("T")[0];
+
+        return date;
+    }
+
+    public String getSTime(){
+        String time = meetDateTime.toString();
+        time = time.split("T")[1];
+        time = time.substring(0, 5);
+
+        return time;
     }
 }

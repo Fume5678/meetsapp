@@ -1,23 +1,24 @@
 package ru.meetsapp.Meets.App.services;
 
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.meetsapp.Meets.App.dto.MeetDTO;
 import ru.meetsapp.Meets.App.entity.Meet;
 import ru.meetsapp.Meets.App.entity.User;
 import ru.meetsapp.Meets.App.repositories.MeetRepository;
-import ru.meetsapp.Meets.App.repositories.UserRepository;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class MeetService {
-    public static final Logger LOG = LoggerFactory.getLogger(UserService.class);
+    public static final Logger LOG = LoggerFactory.getLogger(MeetService.class);
     private final MeetRepository repository;
 
     @Autowired
@@ -28,9 +29,11 @@ public class MeetService {
     public Meet createMeet(MeetDTO dto){
         Meet newMeet = new Meet();
         newMeet.setTitle(dto.title);
-        newMeet.setMeetDate(LocalDateTime.parse(dto.meetDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        newMeet.setMeetTime(LocalDateTime.parse(dto.meetTime, DateTimeFormatter.ofPattern("HH:mm")));
-        newMeet.getMeetUser().add(dto.creator.getId());
+        StringBuilder fullTime = new StringBuilder();
+        fullTime.append(dto.meetDate).append(" ").append(dto.meetTime).append(":00");
+        LocalDateTime dateTime = LocalDateTime.parse(fullTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        newMeet.setMeetDateTime(dateTime);
+        newMeet.getMeetUsers().add(dto.creator.getId());
         newMeet.setCreator(dto.creator);
         newMeet.setLocation(dto.location);
         newMeet.setOpen(dto.open  ? 1 : 0);
@@ -50,11 +53,11 @@ public class MeetService {
 
         if(meet.isEmpty()){
             LOG.error("Not found meet");
-            throw new RuntimeException("User couldn't add");
+            return null;
         }
 
-        meet.get().getMeetUser().add(user.getId());
-        return meet.get();
+        meet.get().getMeetUsers().add(user.getId());
+        return repository.save(meet.get());
     }
 
     public List<Meet> getMeetListByCreator(User creator, int amount){
@@ -68,7 +71,7 @@ public class MeetService {
     }
 
     public List<Meet> getMeetListByUser(User user, int amount){
-        List<Meet> meets = repository.findAllByMeetUserContainingOrderByCreatedDateDesc(user.getId());
+        List<Meet> meets = repository.findAllByMeetUsersContainingOrderByCreatedDateDesc(user.getId());
         List<Meet> result = new ArrayList<>();
         for(int i = 0; i < amount; i++){
             result.add(meets.get(i));
@@ -77,7 +80,7 @@ public class MeetService {
         return result;
     }
 
-    public void deleteMeet(Long id){
+    public void deleteMeetById(Long id){
         Optional<Meet> meet = repository.findMeetById(id);
         meet.ifPresent(repository::delete);
     }
