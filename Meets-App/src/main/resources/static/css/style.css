@@ -38,6 +38,11 @@ ul{
 	background-color: #fff;
 	z-index: 3;*/
 }
+
+.error{
+	color: #d44;
+}
+
 .container{
 	max-width: 500px;
 	margin: 0 auto;
@@ -146,11 +151,6 @@ main.page {
 }
 
 
-
-
-
-/
-
 /*Section title*/
 .section-title {
 	margin: 50px 0 15px;
@@ -222,11 +222,6 @@ h2.section-title_title {
 	padding: 5px 0 5px 5px;
 }
 
-
-
-
-
-
 .promo-box_icon .promo-box_icon_like {
 }
 .promo-box_icon .promo-box_icon_like_link {
@@ -242,23 +237,38 @@ h2.section-title_title {
 	width: 40px;
 }
 
-
 .promo-box_content_info{
 	margin: 10px 0 0 0;
-	
 }
 
 .promo-box_content_info_name {
-	font-size: 18px;
+	font-size: 24px;
+}
+
+.promo-box_content_info_username {
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.promo-box_content_info_username::before {
+	content: "[";
+}
+
+.promo-box_content_info_username::after {
+	content: "]";
 }
 
 .promo-box_content_info_age-title {
-	font-size: 14px;
+	color: #444;
+	font-size: 18px;
 	font-weight: 500;
+	padding-top: 8px;
 }
 
 .promo-box_content_info_age {
-	font-size: 16px;
+	color: #444;
+	font-size: 18px;
+	padding-top: 8px;
 }
 
 
@@ -374,7 +384,7 @@ h2.section-title_title {
 	text-align: center;
 }
 .order-form_form_input, .order-form_form_mesage{
-	margin-top: 30px;
+	margin-top: 40px;
 	
 }
 .order-form_form_input input{

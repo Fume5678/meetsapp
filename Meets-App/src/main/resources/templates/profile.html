@@ -1,6 +1,9 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="en"
+	  xmlns:th="https://thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
 	<meta charset="utf-8">
@@ -67,17 +70,33 @@
 		
 			<div class="container">
 			
-				<h2>Новый профиль</h2>
+				<h2>Редактировать профиль</h2>
 		
 		<!--meeting add-->
-		
-				<form action="111111.php" name="profile-add" method="post">
-					
+
+				<div class="promo-box_img">
+					<div th:if="${user.getImage() == null}">
+						<img src="img/heart.png" alt="">
+					</div>
+					<div th:if="${user.getImage() != null}">
+						<img th:src="@{'data:image/jpeg;base64,'+${user.getEncodedImage()}}" alt="">
+					</div>
+				</div>
+
+				<form th:action="@{/profile/upload}" th:object="${userDTO}" name="load-image" th:method="post" enctype="multipart/form-data">
 					<div class="order-form_form_input">
 					<h4>Загрузите фото</h4>
-						<input type="file" name="myfile" placeholder="Выберите фото" autocomplete="off">
+						<input type="hidden" name="username" th:value="${user.getUsername()}"/><br>
+						<input type="file" th:field="*{image}" placeholder="Выберите фото" autocomplete="off">
+						<div class="order-form_form_button">
+							<button type="submit">Загрузить</button>
+						</div>
 					</div>
-					
+					<span th:if="${error} != null" th:text="${error}" class="error"></span>
+				</form>
+
+
+				<form th:action="@{/profile/upload}" th:object="${UserDTO}" th:method="post"name="update-bio">
 					<div class="order-form_form_input">
 						<input type="text" name="name" placeholder="Ваше имя" autocomplete="off">
 					</div>
@@ -122,18 +141,13 @@
 					</div>
 					
 					<div class="order-form_form_button">
-						<button type="submit">Создать</button>
+						<button type="submit">Сохранить</button>
 					</div>
 				</form>
 		
 		<!-- End meeting add-->
-			
-				
 
 			</div>
-		
-
-	
 
 	</main>
 

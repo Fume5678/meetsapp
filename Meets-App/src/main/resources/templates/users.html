@@ -1,6 +1,9 @@
 <!doctype html>
 
-<html lang="en">
+<html lang="en"
+	  xmlns:th="https://thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
 <head>
 	<meta charset="utf-8">
@@ -14,6 +17,7 @@
 		rel="stylesheet">
 
 	<link rel="stylesheet" href="css/style.css?v=1.0">
+	<link rel="stylesheet" href="../static/css/style.css">
 
 	<!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -71,11 +75,17 @@
 		
 		
 		<!--Promo box-->
+
 		<div class="promo-box">
-			<div class="container">
+			<div class="container" th:each="user : ${users}">
 				<div class="promo-box_content">
 					<div class="promo-box_img">
-						<img src="img/ank-1.jpg" alt="">
+						<div th:if="${user.getImage() == null}">
+							<img src="img/default.png" alt="">
+						</div>
+						<div th:if="${user.getImage() != null}">
+							<img th:src="@{'data:image/jpeg;base64,'+${user.getEncodedImage()}}" alt="">
+						</div>
 					</div>
 					<div class="promo-box_icon">
 						<div class="promo-box_icon_like">
@@ -90,15 +100,21 @@
 						</div>
 					</div>
 					<div class="promo-box_content_info">
-						<span class="promo-box_content_info_name">
-							Самсонова Светлана
+						<span class="promo-box_content_info_name" th:text="${user.getName()}">
+							Name
 						</span>
+						<span class="promo-box_content_info_username" style="font-weight: bold;" th:text="${user.getUsername()}">
+							Username
+						</span>
+						<span class="promo-box_content_info_name" th:text="${user.getLastname()}">
+							Lastname
+						</span><br>
 						<span class="promo-box_content_info_age-title">
-							Возраст:
+							Дата рождения:
 						</span>
 						
-						<span class="promo-box_content_info_age">
-							25
+						<span class="promo-box_content_info_age" th:text="${user.getBirthDay()}">
+							2001-12-12
 						</span>
 					</div>
 
@@ -117,48 +133,6 @@
 		-->
 		<!--End Section title-->
 
-
-		<!--Promo box-->
-		<div class="promo-box">
-			<div class="container">
-				<div class="promo-box_content">
-					<div class="promo-box_img">
-						<img src="img/ank-1.jpg" alt="маникюр">
-					</div>
-					<div class="promo-box_icon">
-						<div class="promo-box_icon_like">
-							<a href="" class="promo-box_icon_like_link">
-								<img src="img/heart.png" alt="">
-							</a>
-						</div>
-						<div class="promo-box_icon_bookmark">
-							<a href="" class="promo-box_icon_bookmark_link">
-								<img src="img/bookmark.png" alt="">
-							</a>
-						</div>
-					</div>
-					
-					<div class="promo-box_content_info">
-						<span class="promo-box_content_info_name">
-							Самсонова Светлана
-						</span>
-						<span class="promo-box_content_info_age-title">
-							Возраст:
-						</span>
-
-						<span class="promo-box_content_info_age">
-							25
-						</span>
-					</div>
-
-
-				</div>
-			</div>
-		</div>
-
-		<!--Promo box-->
-
-		
 
 	</main>
 

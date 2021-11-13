@@ -2,20 +2,15 @@ package ru.meetsapp.Meets.App.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.Generated;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import ru.meetsapp.Meets.App.entity.enums.ERole;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
 @Entity
 @Table(name = "user")
-public class User implements UserDetails {
+public class User{
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
@@ -47,39 +42,30 @@ public class User implements UserDetails {
     private Bio bio;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator", orphanRemoval = true)
     private List<Meet> userMeets = new ArrayList<>();
-    @Column(nullable = false)
-    private ERole role;
+    @Column
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    private Set<String> role = new HashSet<>();
     @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDateTime createdDate;
+    @Column
+    private String birthDay;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] image;
 
     @PrePersist
     protected void onCreate(){
         this.createdDate = LocalDateTime.now();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
+    public String getEncodedImage() {
+        if(image!=null && image.length>0) {
+            String encodeBase64 = Base64.getEncoder().encodeToString(image);
+            return new String(encodeBase64);
+        }
+        else
+            return "";
     }
 }
 

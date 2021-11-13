@@ -5,17 +5,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.meetsapp.Meets.App.dto.BioDTO;
 import ru.meetsapp.Meets.App.dto.UserDTO;
 import ru.meetsapp.Meets.App.entity.Bio;
-import ru.meetsapp.Meets.App.entity.Meet;
 import ru.meetsapp.Meets.App.entity.User;
-import ru.meetsapp.Meets.App.entity.enums.ERole;
+import ru.meetsapp.Meets.App.entity.enums.Roles;
 import ru.meetsapp.Meets.App.repositories.BioRepository;
 import ru.meetsapp.Meets.App.repositories.UserRepository;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 @Service
 public class UserService {
@@ -39,7 +43,9 @@ public class UserService {
         newUser.setLastname(dto.lastname);
         newUser.setEmail(dto.email);
         newUser.setPassword(encoder.encode(dto.password));
-        newUser.setRole(ERole.ROLE_USER);
+        newUser.setBirthDay(dto.birthDay);
+        newUser.getRole().add(Roles.ROLE_USER);
+        newUser.setImage(null);
 
         try {
             LOG.info("Saving user {}", dto.username);
@@ -56,6 +62,7 @@ public class UserService {
             LOG.error("Error not found user, id {}", id);
             return null;
         }
+        user.get().setImage(decompressBytes(user.get().getImage()));
 
         return user.get();
     }
@@ -67,7 +74,22 @@ public class UserService {
             return null;
         }
 
+        user.get().setImage(decompressBytes(user.get().getImage()));
+
         return user.get();
+    }
+
+    public List<User> getLastUsers(int amount){
+        List<User> users = repository.findAllByOrderByCreatedDateDesc();
+
+        List<User> result = new ArrayList<>();
+        for (int i = 0; i < amount && i < users.size(); i++){
+            User user = users.get(i);
+            user.setImage(decompressBytes(user.getImage()));
+            result.add(user);
+        }
+
+        return result;
     }
 
 //    public List<User> getFriendsById(Long id){
@@ -112,15 +134,6 @@ public class UserService {
         return bookmarks;
     }
 
-    public Set<Long> getLikedUsersIdById(Long id) {
-        Optional<User> user = repository.findUserById(id);
-        if(user.isEmpty()){
-            LOG.error("Error not liked user, id {}", id);
-            return null;
-        }
-        return user.get().getLikedUsers();
-    }
-
     public Set<User> getLikedUsersById(Long id) {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
@@ -130,8 +143,9 @@ public class UserService {
         Set<User> likedUsers = new HashSet<>();
 
         for(Long i : user.get().getBookmarkUsers()){
-            Optional<User> bookmark = repository.findUserById(i);
-            bookmark.ifPresent(likedUsers::add);
+            User bookmark = repository.findUserById(i).get();
+            bookmark.setImage(decompressBytes(bookmark.getImage()));
+            likedUsers.add(bookmark);
         }
 
         return likedUsers;
@@ -218,5 +232,59 @@ public class UserService {
         meet.ifPresent(repository::delete);
     }
 
+    private byte[] compressBytes(byte[] data){
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        while(!deflater.finished()){
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+
+        try {
+            outputStream.close();
+        }catch (IOException e){
+            LOG.error("Cannot compress Bytes");
+        }
+        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+        return outputStream.toByteArray();
+    }
+
+    private static byte[] decompressBytes(byte[] data){
+        Inflater inflater = new Inflater();
+        inflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        try{
+            while(!inflater.finished()){
+                int count = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.close();
+        }catch (IOException | DataFormatException e){
+            LOG.error("Cannot decompress bytes");
+        }
+        return outputStream.toByteArray();
+    }
+
+    public User uploadImage(String username, MultipartFile file) throws IOException {
+        Optional<User> user = repository.findUserByUsername(username);
+        if(user.isEmpty()){
+            LOG.error("User not found id {}", username);
+            return null;
+        }
+
+        user.get().setImage(compressBytes(file.getBytes()));
+
+        try {
+            return repository.save(user.get());
+        }
+        catch(Exception e){
+            LOG.error("Failed to save image for user {}", username);
+            throw new RuntimeException("Failed to save image");
+        }
+    }
 
 }

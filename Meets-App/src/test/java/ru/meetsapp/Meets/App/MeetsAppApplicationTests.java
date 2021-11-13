@@ -40,9 +40,7 @@ class WordGenerator{
 
 		return buffer.toString();
 	}
-
 }
-
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -59,12 +57,12 @@ class UserServiceTest{
 			userDTO.password = "1324";
 			userDTO.name = "Vasya";
 			userDTO.lastname = "Grishin";
+			userDTO.birthDay = "2001-12-28";
 			userService.createUser(userDTO);
 		} catch (Exception e){
 			System.out.println(e.getMessage());
 		}
 	}
-
 
 
 	@Test
@@ -75,6 +73,7 @@ class UserServiceTest{
 		userDTO.name = "Vasya";
 		userDTO.email = "nselyavin@inbox.ru";
 		userDTO.lastname = "Grishin";
+		userDTO.birthDay = "2001-12-28";
 		userDTO.password = WordGenerator.generateWord(10);
 
 		assertDoesNotThrow(() -> {
@@ -112,6 +111,7 @@ class UserServiceTest{
 		userDTO.username = WordGenerator.generateWord(10);
 		userDTO.name = "Vasya";
 		userDTO.email = "nselyavin@inbox.ru";
+		userDTO.birthDay = "2001-12-28";
 		userDTO.lastname = "Grishin";
 		userDTO.password = WordGenerator.generateWord(10);
 		User bookmark = userService.createUser(userDTO);
@@ -134,13 +134,14 @@ class UserServiceTest{
 		userDTO.name = "Vasya";
 		userDTO.email = "nselyavin@inbox.ru";
 		userDTO.lastname = "Grishin";
+		userDTO.birthDay = "2001-12-28";
 		userDTO.password = WordGenerator.generateWord(10);
 		User likeUser = userService.createUser(userDTO);
 
 		assertDoesNotThrow(() -> {
 			User user = userService.getUserByUsername("Vasya228");
 			userService.likeUser(user.getId(), likeUser.getId());
-			Set<Long> bookmarks = userService.getLikedUsersIdById(user.getId());
+			Set<Long> bookmarks = userService.getBookmarksIdById(user.getId());
 			assertTrue(bookmarks.contains(likeUser.getId()));
 
 			userService.deleteUserById(likeUser.getId());
@@ -155,6 +156,7 @@ class UserServiceTest{
 		userDTO.name = "Vasya";
 		userDTO.email = "nselyavin@inbox.ru";
 		userDTO.lastname = "Grishin";
+		userDTO.birthDay = "2001-12-28";
 		userDTO.password = WordGenerator.generateWord(10);
 
 		assertDoesNotThrow(() -> {
@@ -192,6 +194,7 @@ class MeetServiceTest{
 			userDTO.password = "1324";
 			userDTO.name = "Vasya";
 			userDTO.lastname = "Grishin";
+			userDTO.birthDay = "2001-12-28";
 			userService.createUser(userDTO);
 		} catch (Exception e){
 			System.out.println(e.getMessage());
@@ -230,6 +233,7 @@ class MeetServiceTest{
 		userDTO.lastname = "Ivanova";
 		userDTO.username = WordGenerator.generateWord(10);
 		userDTO.email = "goodmail@mail.ru";
+		userDTO.birthDay = "2001-12-28";
 		userDTO.password = "pass";
 
 		assertDoesNotThrow(()->{
@@ -271,6 +275,7 @@ class CommentServiceTest{
 				userDTO.password = "1324";
 				userDTO.name = "Vasya";
 				userDTO.lastname = "Grishin";
+				userDTO.birthDay = "2001-12-28";
 				user = userService.createUser(userDTO);
 			}
 
