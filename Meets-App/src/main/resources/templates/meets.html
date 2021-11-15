@@ -40,9 +40,11 @@
 				<nav class="menu_body">
 					<ul class="menu_list">
 						<li><a th:href="@{/users}" class="menu_link ">Люди</a></li>
-						<li><a th:href="@{/meets}" class="menu_link">Встречи</a></li>
-						<li><a th:href="@{/meets/my}"  class="menu_link">Мои встречи</a></li>
-						<li class="menu_list_sub-menu"><a href="" class="menu_link menu-active">Профиль</a>
+<!--						<div th:if="${my == null}">-->
+							<li><a th:href="@{/meets}" class="menu_link" th:classappend="${my} ? '' : 'menu-active'">Встречи</a></li>
+							<li><a th:href="@{/meets/my}"  th:class="menu_link" th:classappend="${my} ? 'menu-active' : ''">Мои встречи</a></li>
+<!--						</div>-->
+						<li class="menu_list_sub-menu"><a href="" class="menu_link">Профиль</a>
 							<ul class="header_menu_sub-menu">
 								<li><a th:href="@{/profile}">Изменить</a></li>
 								<hr>
@@ -54,8 +56,6 @@
 				</nav>
 			</div>
 			<!--End Main menu-->
-
-			
 		</div>
 	</header>
 	<!--End Header-->
@@ -65,89 +65,41 @@
 		
 			<div class="container">
 			
-				<h2>Редактировать профиль</h2>
-		
-		<!--meeting add-->
-
-				<div class="promo-box_img">
-					<div th:if="${user.getImage() == null}">
-						<img th:src="@{img/default.png}" alt="">
-					</div>
-					<div th:if="${user.getImage() != null}">
-						<img th:src="@{'data:image/jpeg;base64,'+${user.getEncodedImage()}}" alt="">
+				<div class="icon-add">
+					<div class="icon-add_img">
+					<a th:href="@{/meets/new}">
+						<img th:src="@{/img/krest-add.png}" alt="">
+					</a>
+					
 					</div>
 				</div>
-
-				<form th:action="@{/profile/upload}" th:object="${userDTO}" name="load-image" th:method="post" enctype="multipart/form-data">
-					<div class="order-form_form_input">
-					<h4>Загрузите фото</h4>
-						<input type="hidden" name="username" th:value="${user.getUsername()}"/><br>
-						<input type="file" th:field="*{image}" placeholder="Выберите фото" autocomplete="off">
-						<div class="order-form_form_button">
-							<button type="submit">Загрузить</button>
-						</div>
-					</div>
-					<span th:if="${error} != null" th:text="${error}" class="error"></span>
-				</form>
-
-				<p th:text="${user.getUsername()}">
-				</p>
-
-				<form th:action="@{/profile/updateBio}" th:object="${bioDTO}" th:method="post"name="update-bio">
-						<input type="hidden" name="username" th:value="${user.getUsername()}"/>
-						<div class="order-form_form_input">
-							<input type="text" name="name" th:value="${user.getName()}" placeholder="Ваше имя" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="lastname" th:value="${user.getLastname()}" placeholder="Ваша фвмилия" autocomplete="off">
-						</div>
-
-
-						<div class="order-form_form_input">
-							<h4>Дата рождения</h4>
-							<input type="date" name="birthday" th:value="${user.getBirthDay()}" placeholder="Выберите дату" required="">
-						</div>
-
-
-						<div class="order-form_form_input">
-							<input type="text" name="biography" th:value="${bio?.getBiography()}" placeholder="Bio" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="height" th:value="${bio?.getHeight()}" placeholder="Ваш рост" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="weight" th:value="${bio?.getWeight()}" placeholder="Ваш вес" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="specialSigns" th:value="${bio?.getSpecialSigns()}" placeholder="Отличительные черты" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="job" th:value="${bio?.getJob()}"  placeholder="Место работы" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="hairColor" th:value="${bio?.getHairColor()}"placeholder="Цвет волос" autocomplete="off">
-						</div>
-
-						<div class="order-form_form_input">
-							<h4>Ваш пол</h4>
-							<select name="gender" th:value="${bio?.getGender()}">
-								<option disabled selected>Выберите</option>
-								<option>Мужской</option>
-								<option>Женский</option>
-								<option>Боевой вертолет МИ-8</option>
-								<option>Не в курсе</option>
-							</select>
-						</div>
-
-						<div class="order-form_form_button">
-							<button type="submit">Сохранить</button>
-						</div>
-
-				</form>
-		
-		<!-- End meeting add-->
-
 			</div>
+		
+		<!--meeting List-->
+			<div th:each="meet : ${meets}">
+				<div class="meeting-list">
+
+						<div class="meeting-list_icon">
+							<img th:src="@{/img/locate.png}" alt="">
+						</div>
+						<div class="meeting-list_ivent">
+							<a th:href="@{/meets/{id}(id=${meet.getId()})}">
+							<div class="meeting-list_ivent_title">
+								<h2 th:text="${meet.getTitle()}">Тайтл встречи</h2>
+							</div>
+							<div class="meeting-list_ivent_date">
+								Дата встречи:<span th:text="${meet.getSDate()}">22.11.2021</span>
+								Время:<span th:text="${meet.getSTime()}">12:30</span>
+							</div>
+							<div class="meeting-list_ivent_adres">
+								Адрес: <span th:text="${meet.getLocation()}">Тверская 22</span>
+							</div>
+							</a>
+						</div>
+				</div>
+			</div>
+		
+		<!-- End meeting List-->
 
 	</main>
 

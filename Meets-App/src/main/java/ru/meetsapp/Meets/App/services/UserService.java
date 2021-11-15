@@ -118,37 +118,15 @@ public class UserService {
         return user.get().getBookmarkUsers();
     }
 
-    public Set<User> getBookmarksUsersById(Long id){
-        Optional<User> user = repository.findUserById(id);
-        if(user.isEmpty()){
-            LOG.error("Error not found bookmark id {}", id);
-            return null;
-        }
-        Set<User> bookmarks = new HashSet<>();
 
-        for(Long i : user.get().getBookmarkUsers()){
-            Optional<User> bookmark = repository.findUserById(i);
-            bookmark.ifPresent(bookmarks::add);
-        }
-
-        return bookmarks;
-    }
-
-    public Set<User> getLikedUsersById(Long id) {
+    public Set<Long> getLikedUsersIdById(Long id) {
         Optional<User> user = repository.findUserById(id);
         if(user.isEmpty()){
             LOG.error("Error not found liked, id {}", id);
             return null;
         }
-        Set<User> likedUsers = new HashSet<>();
 
-        for(Long i : user.get().getBookmarkUsers()){
-            User bookmark = repository.findUserById(i).get();
-            bookmark.setImage(decompressBytes(bookmark.getImage()));
-            likedUsers.add(bookmark);
-        }
-
-        return likedUsers;
+        return user.get().getLikedUsers();
     }
 
     public User bookmarkUser(Long id, Long bookmarkId){
@@ -195,19 +173,33 @@ public class UserService {
         }
     }
 
-    public User updateBio(Long id, BioDTO bioDto){
-        Optional<User> user = repository.findUserById(id);
+    public User updateBio(String username, BioDTO bioDto){
+        Optional<User> user = repository.findUserByUsername(username);
         if(user.isEmpty()){
-            LOG.error("Error not found user, id {}", id);
+            LOG.error("Error not found user {}", username);
             return null;
         }
 
-        Bio newBio = new Bio();
+        Optional<Bio> founded = bioRepository.findBioByUser(user.get());
+        Bio newBio;
+        if(founded.isEmpty()){
+            newBio = new Bio();
+        }else{
+            newBio = founded.get();
+        }
         newBio.setBiography(bioDto.biography);
-        newBio.setGender(bioDto.gender);
+        if(bioDto.gender != null) {
+            newBio.setGender(bioDto.gender);
+        }
         newBio.setHairColor(bioDto.hairColor);
         newBio.setWeight(bioDto.weight);
+        if(newBio.getWeight() == null){
+            newBio.setWeight(100f);
+        }
         newBio.setHeight(bioDto.height);
+        if(newBio.getHeight() == null){
+            newBio.setHeight(100f);
+        }
         newBio.setJob(bioDto.job);
         newBio.setSpecialSigns(bioDto.specialSigns);
         newBio.setUser(user.get());
@@ -217,7 +209,7 @@ public class UserService {
         try {
             return repository.save(user.get());
         } catch (Exception e){
-            LOG.error("Failed to update bio of user {} id", id);
+            LOG.error("Failed to update bio of user {}: {}", username, e.getMessage());
             throw new RuntimeException("Failed to update bio");
         }
     }
@@ -253,6 +245,9 @@ public class UserService {
     }
 
     private static byte[] decompressBytes(byte[] data){
+        if (data == null){
+            return null;
+        }
         Inflater inflater = new Inflater();
         inflater.setInput(data);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);

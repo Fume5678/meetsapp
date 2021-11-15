@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.meetsapp.Meets.App.dto.BioDTO;
 import ru.meetsapp.Meets.App.dto.UserDTO;
 import ru.meetsapp.Meets.App.entity.User;
 import ru.meetsapp.Meets.App.services.MeetService;
@@ -33,22 +34,24 @@ public class UserProfileController {
                 (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.getUserByUsername(userDetails.getUsername());
         UserDTO userDTO = new UserDTO();
+        BioDTO bioDTO = new BioDTO();
         model.addAttribute("user", user);
         model.addAttribute("userDTO", userDTO);
+        model.addAttribute("bioDTO", bioDTO);
         model.addAttribute("bio", user.getBio());
         model.addAttribute("userDetails", userDetails);
+
     }
 
     @GetMapping("")
     public String userProfile(Model model){
-        setupModel(model);
 
+        setupModel(model);
         return "profile";
     }
 
     @PostMapping("/upload")
     public String uploadImage(@Valid UserDTO userDTO, Model model){
-        setupModel(model);
 
         String error = "";
 
@@ -63,15 +66,17 @@ public class UserProfileController {
             error = "Failed to load image: " + e.getMessage();
         }
         model.addAttribute("error", error);
+        setupModel(model);
         return "redirect:/profile";
     }
 
     @PostMapping("/updateBio")
-    public String updatebio(@Valid UserDTO userDTO, Model model){
+    public String updateBio(@Valid BioDTO bioDTO, Model model){
+
+        userService.updateBio(bioDTO.getUsername(), bioDTO);
+
         setupModel(model);
-
-
-        return "profile";
+        return "redirect:/profile";
     }
 
 }

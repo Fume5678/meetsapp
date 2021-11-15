@@ -9,10 +9,12 @@ import javax.persistence.*;
 @Table(name = "bio")
 public class Bio {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
-    private float height;
-    private float weight;
+    @Column(nullable = true, columnDefinition = "FLOAT default 100")
+    private Float height;
+    @Column(nullable = true, columnDefinition = "FLOAT default 100")
+    private Float weight;
     private String hairColor;
     private String gender;
     @Column(columnDefinition = "Text")

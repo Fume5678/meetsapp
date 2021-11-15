@@ -40,7 +40,7 @@ public class User{
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Bio bio;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "creator", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "creator", orphanRemoval = true)
     private List<Meet> userMeets = new ArrayList<>();
     @Column
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)

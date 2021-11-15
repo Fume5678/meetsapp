@@ -25,8 +25,8 @@ public class Meet {
     @ManyToOne(fetch = FetchType.LAZY)
     private User creator;
     @Column
-    @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
-    private Set<Long> meetUsers = new HashSet<>();
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    private Set<String> meetUsers = new HashSet<>();
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "meet", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     @Column(nullable = false, columnDefinition = "INTEGER default 0")

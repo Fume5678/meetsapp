@@ -16,8 +16,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Roboto:wght@400;700&display=swap"
 		rel="stylesheet">
 
-	<link rel="stylesheet" href="css/style.css?v=1.0">
-	<link rel="stylesheet" href="../static/css/style.css">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
 
 	<!--[if lt IE 9]>
 <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -40,14 +39,14 @@
 			<div class="header_menu menu">
 				<nav class="menu_body">
 					<ul class="menu_list">
-						<li><a href="" class="menu_link menu-active">Люди</a></li>
-						<li><a href="" class="menu_link">Встречи</a></li>
-						<li><a href="" class="menu_link">Мои встречи</a></li>
+						<li><a th:href="@{/users}" class="menu_link menu-active">Люди</a></li>
+						<li><a th:href="@{/meets}" class="menu_link">Встречи</a></li>
+						<li><a th:href="@{/meets/my}"  class="menu_link">Мои встречи</a></li>
 						<li class="menu_list_sub-menu"><a href="" class="menu_link">Профиль</a>
 							<ul class="header_menu_sub-menu">
-								<li><a href="">Изменить</a></li>
+								<li><a th:href="@{/profile}">Изменить</a></li>
 								<hr>
-								<li><a href="">Выход</a></li>
+								<li><a th:href="@{/logout}" >Выход</a></li>
 							</ul>
 						</li>
 						
@@ -81,7 +80,7 @@
 				<div class="promo-box_content">
 					<div class="promo-box_img">
 						<div th:if="${user.getImage() == null}">
-							<img src="img/default.png" alt="">
+							<img th:src="@{img/default.png}" alt="">
 						</div>
 						<div th:if="${user.getImage() != null}">
 							<img th:src="@{'data:image/jpeg;base64,'+${user.getEncodedImage()}}" alt="">

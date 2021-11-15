@@ -15,7 +15,7 @@ public class MeetDTO {
     @NotEmpty
     public String location;
     @NotEmpty
-    public User creator;
+    public String creator;
     @NotEmpty
     public String meetDate;
     @NotEmpty

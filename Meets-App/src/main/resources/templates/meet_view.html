@@ -39,10 +39,10 @@
 			<div class="header_menu menu">
 				<nav class="menu_body">
 					<ul class="menu_list">
-						<li><a th:href="@{/users}" class="menu_link ">Люди</a></li>
+						<li><a th:href="@{/users}" class="menu_link menu-active">Люди</a></li>
 						<li><a th:href="@{/meets}" class="menu_link">Встречи</a></li>
 						<li><a th:href="@{/meets/my}"  class="menu_link">Мои встречи</a></li>
-						<li class="menu_list_sub-menu"><a href="" class="menu_link menu-active">Профиль</a>
+						<li class="menu_list_sub-menu"><a href="" class="menu_link">Профиль</a>
 							<ul class="header_menu_sub-menu">
 								<li><a th:href="@{/profile}">Изменить</a></li>
 								<hr>
@@ -56,6 +56,7 @@
 			<!--End Main menu-->
 
 			
+			
 		</div>
 	</header>
 	<!--End Header-->
@@ -64,90 +65,65 @@
 
 		
 			<div class="container">
-			
-				<h2>Редактировать профиль</h2>
+				<h2>Просмотр встречи</h2>
 		
-		<!--meeting add-->
-
-				<div class="promo-box_img">
-					<div th:if="${user.getImage() == null}">
-						<img th:src="@{img/default.png}" alt="">
+		<!--meeting view-->
+		
+				<h3 class="meeting-title" th:text="${meet.getTitle()}">Встреча с Алешей</h3>
+				
+				
+					<div class="meeting-list_ivent_date">
+						Дата встречи:<span th:text="${meet.getSDate()}">22.11.2021</span>
+						Время:<span th:text="${meet.getSTime()}">12:30</span>
 					</div>
-					<div th:if="${user.getImage() != null}">
-						<img th:src="@{'data:image/jpeg;base64,'+${user.getEncodedImage()}}" alt="">
+					<div class="meeting-list_ivent_adres">
+						Адрес: <span th:text="${meet.getLocation()}">Тверская 22</span>
 					</div>
-				</div>
-
-				<form th:action="@{/profile/upload}" th:object="${userDTO}" name="load-image" th:method="post" enctype="multipart/form-data">
-					<div class="order-form_form_input">
-					<h4>Загрузите фото</h4>
-						<input type="hidden" name="username" th:value="${user.getUsername()}"/><br>
-						<input type="file" th:field="*{image}" placeholder="Выберите фото" autocomplete="off">
-						<div class="order-form_form_button">
-							<button type="submit">Загрузить</button>
-						</div>
+				<div class="meeting-list_ivent_adres">
+					Участники:
+					<div th:each="meetUser : ${meetUsers}">
+						<span th:text="${meetUser} ">Света</span>
 					</div>
-					<span th:if="${error} != null" th:text="${error}" class="error"></span>
-				</form>
 
-				<p th:text="${user.getUsername()}">
-				</p>
-
-				<form th:action="@{/profile/updateBio}" th:object="${bioDTO}" th:method="post"name="update-bio">
-						<input type="hidden" name="username" th:value="${user.getUsername()}"/>
+					<form th:method="POST" th:action="@{/meets/{id}/addUsers(id=${meet.getId()})}">
 						<div class="order-form_form_input">
-							<input type="text" name="name" th:value="${user.getName()}" placeholder="Ваше имя" autocomplete="off">
+							<input type="text" th:value="${addUsers}" placeholder="Добавить пользователей" name="addUsers" autocomplete="off"/>
 						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="lastname" th:value="${user.getLastname()}" placeholder="Ваша фвмилия" autocomplete="off">
-						</div>
-
-
-						<div class="order-form_form_input">
-							<h4>Дата рождения</h4>
-							<input type="date" name="birthday" th:value="${user.getBirthDay()}" placeholder="Выберите дату" required="">
-						</div>
-
-
-						<div class="order-form_form_input">
-							<input type="text" name="biography" th:value="${bio?.getBiography()}" placeholder="Bio" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="height" th:value="${bio?.getHeight()}" placeholder="Ваш рост" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="weight" th:value="${bio?.getWeight()}" placeholder="Ваш вес" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="specialSigns" th:value="${bio?.getSpecialSigns()}" placeholder="Отличительные черты" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="job" th:value="${bio?.getJob()}"  placeholder="Место работы" autocomplete="off">
-						</div>
-						<div class="order-form_form_input">
-							<input type="text" name="hairColor" th:value="${bio?.getHairColor()}"placeholder="Цвет волос" autocomplete="off">
-						</div>
-
-						<div class="order-form_form_input">
-							<h4>Ваш пол</h4>
-							<select name="gender" th:value="${bio?.getGender()}">
-								<option disabled selected>Выберите</option>
-								<option>Мужской</option>
-								<option>Женский</option>
-								<option>Боевой вертолет МИ-8</option>
-								<option>Не в курсе</option>
-							</select>
-						</div>
-
 						<div class="order-form_form_button">
 							<button type="submit">Сохранить</button>
 						</div>
 
-				</form>
-		
-		<!-- End meeting add-->
+					</form>
+				</div>
+				
+				<h3 class="meeting-title">Обсуждение</h3>
+				<form th:action="@{/meets/{id}/addComment(id=${user.getId()})}" th:object="${commentDTO}" name="meeting-com" th:method="post">
+					<input type="hidden" name="username" th:value="${user.getUsername()}"/>
+					<input type="hidden" name="meetId" th:value="${meet.getId()}"/>
+					<input type="hidden" name="userId" th:value="${user.getId()}"/>
+					<div class="order-form_form_mesage">
+						<textarea name="message" th:field="*{message}" id="" cols="60" rows="5" placeholder="Новый комментарий" required=""></textarea>
+					</div>
 
+					<div class="order-form_form_button">
+						<button type="submit">Отправить</button>
+					</div>
+				</form>
+				
+				<div class="meeting-com"  th:each="comment : ${comments}">
+						<div class="meeting-com_av">
+							<div class="meeting-com_av_name" th:text="${comment.getUsername()}">
+							</div>
+						</div>
+						<div class="meeting-com_comment" th:text="${comment.getMessage()}">
+						</div>
+				</div>
+
+		<!-- End meeting view-->
 			</div>
+		
+
+	
 
 	</main>
 
@@ -158,7 +134,6 @@
 				<div class="footer_contact_title">
 					<h4>Контакты</h4>
 				</div>
-				<div class="footer_contact_adress">Адрес: </div>
 				<div class="footer_contact_tel"><a href="tel:89292511708">т.&nbsp;+7925-925-925-17-08</a></div>
 				<div class="footer_contact_email"><a href="mailto:nailservice-kotelniki@yandex.ru">Email:</a></div>
 			</div>

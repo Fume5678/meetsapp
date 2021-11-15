@@ -13,6 +13,7 @@ import ru.meetsapp.Meets.App.dto.BioDTO;
 import ru.meetsapp.Meets.App.dto.CommentDTO;
 import ru.meetsapp.Meets.App.dto.MeetDTO;
 import ru.meetsapp.Meets.App.dto.UserDTO;
+import ru.meetsapp.Meets.App.entity.Bio;
 import ru.meetsapp.Meets.App.entity.Comment;
 import ru.meetsapp.Meets.App.entity.Meet;
 import ru.meetsapp.Meets.App.entity.User;
@@ -123,7 +124,6 @@ class UserServiceTest{
 			assertTrue(bookmarks.contains(bookmark.getId()));
 
 			userService.deleteUserById(bookmark.getId());
-			userService.deleteUserById(user.getId());
 		});
 	}
 
@@ -136,16 +136,15 @@ class UserServiceTest{
 		userDTO.lastname = "Grishin";
 		userDTO.birthDay = "2001-12-28";
 		userDTO.password = WordGenerator.generateWord(10);
-		User likeUser = userService.createUser(userDTO);
+		User likedUser = userService.createUser(userDTO);
 
 		assertDoesNotThrow(() -> {
 			User user = userService.getUserByUsername("Vasya228");
-			userService.likeUser(user.getId(), likeUser.getId());
-			Set<Long> bookmarks = userService.getBookmarksIdById(user.getId());
-			assertTrue(bookmarks.contains(likeUser.getId()));
+			userService.likeUser(user.getId(), likedUser.getId());
+			Set<Long> likedUsers = userService.getLikedUsersIdById(user.getId());
+			assertTrue(likedUsers.contains(likedUser.getId()));
 
-			userService.deleteUserById(likeUser.getId());
-			userService.deleteUserById(user.getId());
+			userService.deleteUserById(likedUser.getId());
 		});
 	}
 
@@ -168,7 +167,7 @@ class UserServiceTest{
 			bioDTO.height = 172.0f;
 			bioDTO.weight = 80.0f;
 			bioDTO.specialSigns = "Monstr";
-			user = userService.updateBio(user.getId(), bioDTO);
+			user = userService.updateBio(user.getUsername(), bioDTO);
 			assertEquals(user.getBio().getGender(), "male");
 			assertEquals(user.getBio().getHeight(), bioDTO.height);
 
@@ -186,7 +185,8 @@ class MeetServiceTest{
 	@Autowired
 	UserService userService;
 
-	public MeetServiceTest(){
+	@BeforeEach
+	public void beforeAll(){
 		try{
 			UserDTO userDTO = new UserDTO();
 			userDTO.email = "nselyavin@inbox.ru";
@@ -205,7 +205,7 @@ class MeetServiceTest{
 	void createMeetTest(){
 		User user = userService.getUserByUsername("Vasya228");
 		MeetDTO meetDTO = new MeetDTO();
-		meetDTO.creator = user;
+		meetDTO.creator = user.getUsername();
 		meetDTO.meetDate = "2020-11-12";
 		meetDTO.meetTime = "12:23";
 		meetDTO.title = WordGenerator.generateWord(12);
@@ -223,7 +223,7 @@ class MeetServiceTest{
 	void addUserToMeet(){
 		User user = userService.getUserByUsername("Vasya228");
 		MeetDTO meetDTO = new MeetDTO();
-		meetDTO.creator = user;
+		meetDTO.creator = user.getUsername();
 		meetDTO.meetDate = "2020-11-12";
 		meetDTO.meetTime = "12:23";
 		meetDTO.title = WordGenerator.generateWord(12);
@@ -239,7 +239,7 @@ class MeetServiceTest{
 		assertDoesNotThrow(()->{
 			Meet meet = meetService.createMeet(meetDTO);
 			User addedUser = userService.createUser(userDTO);
-			meet = meetService.addUserToMeet(meet.getId(), addedUser);
+			meet = meetService.addUserToMeet(meet.getId(), addedUser.getUsername());
 			assertTrue(meet.getMeetUsers().contains(addedUser.getId()));
 
 			meetService.deleteMeetById(meet.getId());
@@ -280,7 +280,7 @@ class CommentServiceTest{
 			}
 
 			MeetDTO meetDTO = new MeetDTO();
-			meetDTO.creator = user;
+			meetDTO.creator = user.getUsername();
 			meetDTO.meetDate = "2020-11-12";
 			meetDTO.meetTime = "12:23";
 			meetDTO.title = WordGenerator.generateWord(12);
@@ -294,7 +294,7 @@ class CommentServiceTest{
 	@Test
 	public void createCommentTest(){
 		CommentDTO commentDTO = new CommentDTO();
-		commentDTO.meet = meet;
+		commentDTO.meetId = meet.getId();
 		commentDTO.username = WordGenerator.generateWord(10);
 		commentDTO.message = "Message";
 		commentDTO.userId = 2L;
