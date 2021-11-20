@@ -34,7 +34,7 @@
 			</div>
 			<!--End Mobile menu-->
 
-			
+
 			<!--Main menu-->
 			<div class="header_menu menu">
 				<nav class="menu_body">
@@ -49,7 +49,7 @@
 								<li><a th:href="@{/logout}" >Выход</a></li>
 							</ul>
 						</li>
-						
+
 					</ul>
 				</nav>
 			</div>
@@ -73,67 +73,78 @@
 		<!--End Section title-->
 		
 		
-		<!--Promo box-->
-
+		<!--User view-->
 		<div class="promo-box">
-			<div class="container" th:each="user : ${users}">
-				<div class="promo-box_content">
-					<div class="promo-box_img">
-						<div th:if="${user.getImage() == null}">
-							<img th:src="@{/img/default.png}" alt="">
-						</div>
-						<div class="user-view-conrent_img" th:if="${user.getImage() != null}">
-							<img th:src="@{'data:image/jpeg;base64,'+${user.getEncodedImage()}}" alt="">
+			<div class="container">
+				<div class="user-view">
+					<div class="container">
+						<div class="user-view-conrent">
+							<div class="user-view-conrent_head">
+								<div class="user-view-conrent_img" th:if="${user.getImage() == null}">
+									<img th:src="@{/img/default.png}" alt="">
+								</div>
+								<div class="user-view-conrent_img" th:if="${user.getImage() != null}">
+									<img th:src="@{'data:image/jpeg;base64,'+${user.getEncodedImage()}}" alt="">
+								</div>
+								<div class="user-view-conrent_name-info">
+									<div class="user-view-conrent_name-info_name">
+										<h4 th:text="${user.getName()}">Светлана</h4><span class="user-view_data"></span>
+									</div>
+									<div class="user-view-conrent_name-info_nickname">
+										<h5 th:text="${user.getUsername()}">Megasvetik</h5>
+									</div>
+									<div class="user-view-conrent_name-info_lastname">
+										<h4 th:text="${user.getLastname()}">Иванова</h4>
+									</div>
+									<div class="user-view-conrent_name-info_email">
+									E-mail: <span class="user-view_data" th:text="${user.getEmail()}">ghdgf@mail.ru</span>
+									</div>
+									<div class="user-view-conrent_name-info_date">
+									Дата рождения: <span class="user-view_data" th:text="${user.getBirthDay()}">30.11.2001</span>
+									</div>
+								</div>
+							</div>
+							
+							<div class="user-view-conrent_info">
+								<h3>Данные:</h3>
+								<div class="user-view-conrent_info_d user-view-conrent_info_height">
+									Рост: <span class="user-view_data" th:text="${bio?.getHeight()}">170 см.</span>
+								</div>
+								<div class="user-view-conrent_info_d user-view-conrent_info_weight">
+									Вес: <span class="user-view_data" th:text="${bio?.getWeight()}">55 кг.</span>
+								</div>
+								<div class="user-view-conrent_info_d user-view-conrent_info_gender">
+									Гендер: <span class="user-view_data" th:text="${bio?.getGender()}">Мальчик</span>
+								</div>
+								<div class="user-view-conrent_info_d user-view-conrent_info_hair">
+									Цвет волос: <span class="user-view_data" th:text="${bio?.getHairColor()}">русый</span>
+								</div>
+								<div class="user-view-conrent_info_d user-view-conrent_info_job">
+									Работа: <span class="user-view_data" th:text="${bio?.getJob()}">менеджер</span>
+								</div>
+								<div class="user-view-conrent_info_d user-view-conrent_info_sings">
+									Особенные черты: <span class="user-view_data" th:text="${bio?.getSpecialSigns()}">косоглазие</span>
+								</div>
+								<div class="user-view-conrent_info_d user-view-conrent_info_bio">
+									<h5>Биография: </h5>
+									<p th:text="${bio?.getBiography()}">
+										Родилась 11 (23) июня 1889 года под Одессой в семье потомственного дворянина, отставного инженера-механика флота А.А.Горенко. Со стороны матери И.Э.Стоговой А.Ахматова состояла в отдаленном родстве с Анной Буниной – первой русской поэтессой. Своим предком по материнской линии Ахматова считала легендарного ордынского хана Ахмата, от имени которого и образовала свой псевдоним. 
+									</p>
+								</div>
+							</div>
+
 						</div>
 					</div>
-					<div class="promo-box_icon">
-						<div class="promo-box_icon_like">
-							<a href="" class="promo-box_icon_like_link">
-								<img th:src="@{/img/heart.png}" alt="">
-							</a>
-						</div>
-						<div class="promo-box_icon_bookmark">
-							<a href="" class="promo-box_icon_bookmark_link">
-								<img th:src="@{/img/bookmark.png}" alt="">
-							</a>
-						</div>
-					</div>
-					<a th:href="@{/users/{id}(id=${user.getId()})}">
-						<div class="promo-box_content_info">
-							<span class="promo-box_content_info_name" th:text="${user.getName()}">
-								Name
-							</span>
-							<span class="promo-box_content_info_username" style="font-weight: bold;" th:text="${user.getUsername()}">
-								Username
-							</span>
-							<span class="promo-box_content_info_name" th:text="${user.getLastname()}">
-								Lastname
-							</span><br>
-							<span class="promo-box_content_info_age-title">
-								Дата рождения:
-							</span>
-
-							<span class="promo-box_content_info_age" th:text="${user.getBirthDay()}">
-								2001-12-12
-							</span>
-						</div>
-					</a>
-
 				</div>
 			</div>
 		</div>
 
-		<!--Promo box-->
+		<!--End User view-->
 		
 
-		<!--Section title-->
-		<!--
-		<div class="section-title">
-			<h2 class="section-title_title">Заголовок</h2>
-		</div>
-		-->
-		<!--End Section title-->
+		
 
+		
 
 	</main>
 

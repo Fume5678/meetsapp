@@ -194,6 +194,11 @@ h2.section-title_title {
 	margin: 0 auto;
 }
 
+.promo-box_content a{
+	text-decoration: none;
+	color: rgb(93, 93, 93);
+}
+
 
 .promo-box_content:hover .promo-box_icon{
 	opacity: 1;
@@ -239,6 +244,11 @@ h2.section-title_title {
 
 .promo-box_content_info{
 	margin: 10px 0 0 0;
+}
+
+.promo-box_content_info a{
+	text-decoration: none;
+	color: rgb(93, 93, 93);
 }
 
 .promo-box_content_info_name {
@@ -345,6 +355,12 @@ h2.section-title_title {
 	-ms-flex-align: center;
 	align-items: center;
 }
+
+.meeting-com .meeting-com_av a{
+	text-decoration: none;
+	color: rgb(93, 93, 93);
+}
+
 .meeting-com .meeting-com_av_foto {
 	overflow: hidden;
 	position: relative;
@@ -475,6 +491,77 @@ select {
 }
 /*End Order form*/
 
+/*User view*/
+h4{
+	font-size: 18px;
+	margin: 0;
+}
+h5{
+	font-size: 14px;
+	margin: 0;
+}
+	/*User view*/
+.user-view{
+	margin: 20px 0;
+}
+
+.user-view-conrent_head{
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+
+}
+.user-view-conrent_name-info{
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.user-view-conrent_name-info_name{
+	margin-top: 10px;
+}
+.user-view-conrent_name-info_nickname{
+	margin-top: 5px;
+}
+.user-view-conrent_name-info_lastname{
+	margin-top: 15px;
+}
+.user-view-conrent_name-info_email{
+	margin-top: 20px;
+}
+.user-view-conrent_name-info_date{
+	margin-top: 15px;
+}
+
+.user-view_data{
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.user-view-conrent_img{
+	width: 300px;
+	height: 300px;
+}
+.user-view-conrent_img img{
+	width: 100%;
+	height: 100%;
+	-o-object-fit: cover;
+	object-fit: cover;
+	-o-object-position: 0 0;
+	object-position: 0 0;
+}
+
+.user-view-conrent_name-info{
+	margin: 0 0 0 30px;
+}
+.user-view-conrent_info_d {
+	margin-top: 15px;
+}
+.user-view-conrent_info_bio p{
+	margin-top: 5px;
+}
+
+/*End User view*/
+
 /*Footer*/
 .footer{
 	border-top: 1px solid #d7d7d7;
@@ -519,6 +606,7 @@ select {
 	flex: 0 1 33.3333%;
 	text-align: end;
 }
+
 /*End Footer*/
 
 /*Contact block*/
@@ -1034,6 +1122,12 @@ content: 'V';
 		-ms-flex-pack: center;
 		justify-content: center;
 	}
+
+	.promo-box_content a{
+		text-decoration: none;
+		color: rgb(93, 93, 93);
+	}
+
 	.promo-box_content .promo-box_dicription {
 		-webkit-box-ordinal-group: 3;
 		-ms-flex-order: 2;

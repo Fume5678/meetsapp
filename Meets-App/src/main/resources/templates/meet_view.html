@@ -112,8 +112,10 @@
 				
 				<div class="meeting-com"  th:each="comment : ${comments}">
 						<div class="meeting-com_av">
-							<div class="meeting-com_av_name" th:text="${comment.getUsername()}">
-							</div>
+							<a th:href="@{/user/id(id=${comment.getUserId()})}">
+								<div class="meeting-com_av_name" th:text="${comment.getUsername()}">
+								</div>
+							</a>
 						</div>
 						<div class="meeting-com_comment" th:text="${comment.getMessage()}">
 						</div>

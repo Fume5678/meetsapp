@@ -92,21 +92,6 @@ public class UserService {
         return result;
     }
 
-//    public List<User> getFriendsById(Long id){
-//        Optional<User> user = repository.findUserById(id);
-//        if(user.isEmpty()){
-//            LOG.error("Error not found user, id {}", id);
-//            throw new RuntimeException("User not found");
-//        }
-//        List<User> friends = new ArrayList<>();
-//
-//        for(Long i : user.get().getFriends()){
-//            Optional<User> friend = repository.findUserById(i);
-//            friend.ifPresent(friends::add);
-//        }
-//
-//        return friends;
-//    }
 
     public Set<Long> getBookmarksIdById(Long id){
         Optional<User> user = repository.findUserById(id);

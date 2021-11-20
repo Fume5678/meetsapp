@@ -26,6 +26,8 @@ public class User{
     private String password;
     @Column(columnDefinition = "INTEGER default 0")
     private int likes;
+    @Column
+    private String birthDay;
 
     @Column
     @ElementCollection(targetClass = Long.class, fetch = FetchType.EAGER)
@@ -47,8 +49,6 @@ public class User{
     private Set<String> role = new HashSet<>();
     @JsonFormat(pattern = "yyyy-mm-dd")
     private LocalDateTime createdDate;
-    @Column
-    private String birthDay;
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")

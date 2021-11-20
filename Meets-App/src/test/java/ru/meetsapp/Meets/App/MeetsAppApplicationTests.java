@@ -54,7 +54,7 @@ class UserServiceTest{
 		try{
 			UserDTO userDTO = new UserDTO();
 			userDTO.email = "nselyavin@inbox.ru";
-			userDTO.username = "Vasya228";
+			userDTO.username = "Oleg321";
 			userDTO.password = "1324";
 			userDTO.name = "Vasya";
 			userDTO.lastname = "Grishin";
