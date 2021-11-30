@@ -10,15 +10,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class MeetDTO {
-    @NotEmpty
+    public Long id;
     public String title;
-    @NotEmpty
     public String location;
-    @NotEmpty
     public String creator;
-    @NotEmpty
     public String meetDate;
-    @NotEmpty
     public String meetTime;
     public boolean open = false;
 }

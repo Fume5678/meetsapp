@@ -106,7 +106,8 @@ public class MeetService {
 
     public void deleteMeetById(Long id){
         Optional<Meet> meet = meetRepository.findMeetById(id);
-        meet.ifPresent(meetRepository::delete);
+        meet.get().getMeetUsers().clear();
+        meetRepository.delete(meet.get());
     }
 
     public Meet getMeetListById(long meetId) {

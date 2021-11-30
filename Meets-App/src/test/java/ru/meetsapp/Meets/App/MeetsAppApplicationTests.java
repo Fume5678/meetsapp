@@ -181,7 +181,6 @@ class UserServiceTest{
 class MeetServiceTest{
 	@Autowired
 	MeetService meetService;
-
 	@Autowired
 	UserService userService;
 

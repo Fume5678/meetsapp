@@ -16,8 +16,8 @@ public interface MeetRepository extends JpaRepository<Meet, Long> {
     List<Meet> findAllByMeetUsersLikeOrderByCreatedDateDesc(String username);
     List<Meet> findAllByCreatorOrderByCreatedDateDesc(User user);
     List<Meet> findAllByOpenOrderByCreatedDateDesc(int open);
-
-
     List<Meet> findAllByOrderByCreatedDateDesc();
+
+    void deleteMeetById(Long id);
 }
 

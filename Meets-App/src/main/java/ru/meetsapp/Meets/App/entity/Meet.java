@@ -27,7 +27,7 @@ public class Meet {
     @Column
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     private Set<String> meetUsers = new HashSet<>();
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "meet", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "meet", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
     @Column(nullable = false, columnDefinition = "INTEGER default 0")
     private int open;

@@ -88,6 +88,7 @@ public class MeetController {
         model.addAttribute("meetUsers", meetUsers);
         model.addAttribute("addUsers", "");
         model.addAttribute("commentDTO", commentDTO);
+        model.addAttribute("meetDTO", new MeetDTO());
         setupModel(model);
         return "meet_view";
     }
@@ -106,6 +107,13 @@ public class MeetController {
         commentService.addComment(commentDTO);
         setupModel(model);
         return "redirect:/meets/" + Long.toString(meetId);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteMeet(@PathVariable("id") long meetId, Model model){
+        meetService.deleteMeetById(meetId);
+        setupModel(model);
+        return "redirect:/meets";
     }
 
 

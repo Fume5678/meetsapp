@@ -70,8 +70,12 @@
 		<!--meeting view-->
 		
 				<h3 class="meeting-title" th:text="${meet.getTitle()}">Встреча с Алешей</h3>
-				
-				
+				<form th:action="@{/meets/{id}(id=${meet.getId()})}" th:object="${meetDTO}" th:method="DELETE" >
+					<div class="order-form_form_button">
+						<button type="submit" style="background-color: #c43636">Отменить встречу</button>
+					</div>
+				</form>
+
 					<div class="meeting-list_ivent_date">
 						Дата встречи:<span th:text="${meet.getSDate()}">22.11.2021</span>
 						Время:<span th:text="${meet.getSTime()}">12:30</span>

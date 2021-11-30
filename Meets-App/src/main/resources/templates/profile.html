@@ -93,7 +93,8 @@
 				<p th:text="${user.getUsername()}">
 				</p>
 
-				<form th:action="@{/profile/updateBio}" th:object="${bioDTO}" th:method="post"name="update-bio">
+				<form th:action="@{/profile/updateBio}" th:object="${bioDTO}" th:method="PUT" name="update-bio">
+<!--					<input type="hidden" name="_method" value="put">-->
 						<input type="hidden" name="username" th:value="${user.getUsername()}"/>
 						<div class="order-form_form_input">
 							<input type="text" name="name" th:value="${user.getName()}" placeholder="Ваше имя" autocomplete="off">

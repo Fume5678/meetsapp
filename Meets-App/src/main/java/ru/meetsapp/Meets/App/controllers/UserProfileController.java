@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.meetsapp.Meets.App.dto.BioDTO;
 import ru.meetsapp.Meets.App.dto.UserDTO;
@@ -70,7 +71,7 @@ public class UserProfileController {
         return "redirect:/profile";
     }
 
-    @PostMapping("/updateBio")
+    @PutMapping("/updateBio")
     public String updateBio(@Valid BioDTO bioDTO, Model model){
 
         userService.updateBio(bioDTO.getUsername(), bioDTO);
